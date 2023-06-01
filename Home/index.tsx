@@ -14,7 +14,6 @@ import {
   StyleSheet,
   useColorScheme
 } from 'react-native';
-import Colors from '../theme/Colors';
 import { Messages } from './Messages';
 import ProfilePage from './ProfilePage';
 import {
@@ -23,14 +22,7 @@ import {
   DrawerItemList,
   DrawerItem
 } from '@react-navigation/drawer';
-import {
-  Avatar,
-  Button,
-  Card,
-  Icon,
-  lightColors,
-  darkColors
-} from '@rneui/themed';
+import { Avatar, Button, Card, Icon, lightColors } from '@rneui/themed';
 
 const Drawer = createDrawerNavigator();
 
@@ -114,21 +106,21 @@ const MainScreen = ({ navigation }) => {
       </Card>
       <View style={styles.row}>
         <Card containerStyle={[styles.col]}>
-          <Card.Title style={styles.title}>Total Unit</Card.Title>
+          <Card.Title style={styles.title}>Total Unit(s)</Card.Title>
           <Text style={styles.units}>12</Text>
         </Card>
         <Card containerStyle={styles.col}>
-          <Card.Title style={styles.title}>Current Unit</Card.Title>
+          <Card.Title style={styles.title}>Current Unit(s)</Card.Title>
           <Text style={styles.units}>2</Text>
         </Card>
       </View>
       <View style={styles.row}>
         <Card containerStyle={[styles.col]}>
-          <Card.Title style={styles.title}>Expired Unit</Card.Title>
+          <Card.Title style={styles.title}>Expired Unit(s)</Card.Title>
           <Text style={styles.units}>07</Text>
         </Card>
         <Card containerStyle={styles.col}>
-          <Card.Title style={styles.title}>Reimbursed Unit</Card.Title>
+          <Card.Title style={styles.title}>Reimbursed Unit(s)</Card.Title>
           <Text style={styles.units}>12</Text>
         </Card>
       </View>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
+import { CustomPicker } from '../app/components';
 import { Button, CheckBox, Input } from '@rneui/themed';
-import { CustomPicker } from 'Components';
 
 const RequestBlood = ({ navigation }) => {
   const [selectedValue, setSelectedValue] = useState('myself');

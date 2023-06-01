@@ -8,7 +8,7 @@
 import React from 'react';
 import { Platform, useColorScheme } from 'react-native';
 import HomeScreen from './Home';
-import { Message } from './Home/Messages'
+import { Message } from './Home/Messages';
 import RequestBlood from './Home/RequestBlood';
 import RequestBloodConfirmation from './Home/RequestBloodConfirmation';
 import LoginScreen from './LoginScreen';
