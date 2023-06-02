@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "924623661405",
+    "project_id": "bloodcircle-9994c",
+    "storage_bucket": "bloodcircle-9994c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:924623661405:android:4c1254c7d4027011a520b4",
+        "android_client_info": {
+          "package_name": "com.bloodcircle"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDn_8aHcN6hLXUk5oYPj9NirXBtkXch1Og"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

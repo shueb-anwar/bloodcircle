@@ -7,12 +7,13 @@
 
 import React from 'react';
 import { Platform, useColorScheme } from 'react-native';
-import HomeScreen from './Home';
-import { Message } from './Home/Messages';
+import { MainScreen, CustomDrawerContent } from './Home';
+import { Message, Messages } from './Home/Messages';
+import ProfileScreen from './Home/ProfilePage';
 import RequestBlood from './Home/RequestBlood';
 import RequestBloodConfirmation from './Home/RequestBloodConfirmation';
 import LoginScreen from './LoginScreen';
-import ProfileScreen from './Profile';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
   NavigationContainer,
   DefaultTheme,
@@ -20,6 +21,7 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
+  Icon,
   lightColors,
   darkColors,
   createTheme,
@@ -146,8 +148,75 @@ const MyDarkTheme = {
   }
 };
 
+const Drawer = createDrawerNavigator();
+const DrawerScreens = () => {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  return (
+    <Drawer.Navigator
+      initialRouteName="Main"
+      screenOptions={
+        isDarkMode
+          ? {
+              headerTintColor: lightColors.white
+            }
+          : {}
+      }
+      drawerContent={CustomDrawerContent}>
+      <Drawer.Screen
+        name="Main"
+        component={MainScreen}
+        options={{
+          title: 'Home',
+          drawerIcon: ({ color, size, focused }) => (
+            <Icon
+              name={focused ? 'home' : 'home-outline'}
+              type="material-community"
+              color={color}
+              size={size}
+            />
+          )
+        }}
+      />
+      <Drawer.Screen
+        name="Messages"
+        component={Messages}
+        options={{
+          drawerIcon: ({ color, size, focused }) => (
+            <Icon
+              name={focused ? 'inbox' : 'inbox-outline'}
+              type="material-community"
+              color={color}
+              size={size}
+            />
+          )
+        }}
+      />
+      <Drawer.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          drawerIcon: ({ color, size, focused }) => (
+            <Icon
+              name={focused ? 'account' : 'account-outline'}
+              type="material-community"
+              color={color}
+              size={size}
+            />
+          )
+        }}
+      />
+    </Drawer.Navigator>
+  );
+};
+
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
+
+  // if (!user) {
+  //   alert('no user')
+  // } else {
+  // }
 
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : theme}>
@@ -160,7 +229,7 @@ const App = () => {
           />
           <Stack.Screen
             name="Home"
-            component={HomeScreen}
+            component={DrawerScreens}
             options={{ title: 'Welcome', headerShown: false }}
           />
           <Stack.Screen name="Profile" component={ProfileScreen} />

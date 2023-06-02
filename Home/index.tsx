@@ -14,80 +14,14 @@ import {
   StyleSheet,
   useColorScheme
 } from 'react-native';
-import { Messages } from './Messages';
-import ProfilePage from './ProfilePage';
 import {
-  createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem
 } from '@react-navigation/drawer';
 import { Avatar, Button, Card, Icon, lightColors } from '@rneui/themed';
 
-const Drawer = createDrawerNavigator();
-
-const Home = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  return (
-    <Drawer.Navigator
-      initialRouteName="Main"
-      screenOptions={
-        isDarkMode
-          ? {
-              headerTintColor: lightColors.white
-            }
-          : {}
-      }
-      drawerContent={CustomDrawerContent}>
-      <Drawer.Screen
-        name="Main"
-        component={MainScreen}
-        options={{
-          title: 'Home',
-          drawerIcon: ({ color, size, focused }) => (
-            <Icon
-              name={focused ? 'home' : 'home-outline'}
-              type="material-community"
-              color={color}
-              size={size}
-            />
-          )
-        }}
-      />
-      <Drawer.Screen
-        name="Messages"
-        component={Messages}
-        options={{
-          drawerIcon: ({ color, size, focused }) => (
-            <Icon
-              name={focused ? 'inbox' : 'inbox-outline'}
-              type="material-community"
-              color={color}
-              size={size}
-            />
-          )
-        }}
-      />
-      <Drawer.Screen
-        name="Profile"
-        component={ProfilePage}
-        options={{
-          drawerIcon: ({ color, size, focused }) => (
-            <Icon
-              name={focused ? 'account' : 'account-outline'}
-              type="material-community"
-              color={color}
-              size={size}
-            />
-          )
-        }}
-      />
-    </Drawer.Navigator>
-  );
-};
-
-const MainScreen = ({ navigation }) => {
+export const MainScreen = ({ navigation }) => {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
@@ -128,7 +62,7 @@ const MainScreen = ({ navigation }) => {
   );
 };
 
-function CustomDrawerContent(props) {
+export function CustomDrawerContent(props) {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
@@ -207,5 +141,3 @@ const styles = StyleSheet.create({
   },
   col: { flex: 1 }
 });
-
-export default Home;
