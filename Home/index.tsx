@@ -6,7 +6,7 @@
  */
 
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   ScrollView,
   View,
@@ -14,18 +14,14 @@ import {
   StyleSheet,
   useColorScheme
 } from 'react-native';
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem
-} from '@react-navigation/drawer';
-import { Avatar, Button, Card, Icon, lightColors } from '@rneui/themed';
 
-export const MainScreen = ({ navigation }) => {
+import { Button, Card, Icon, lightColors } from '@rneui/themed';
+
+const MainScreen = ({ navigation }) => {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.container}>
       <Card>
         <Card.Title style={styles.userName}>John Doe</Card.Title>
         <Button
@@ -62,52 +58,10 @@ export const MainScreen = ({ navigation }) => {
   );
 };
 
-export function CustomDrawerContent(props) {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  return (
-    <>
-      <View style={styles.avatarContainer}>
-        <Avatar
-          size={100}
-          rounded
-          // icon={{ name: 'account', type: 'material-community' }}
-          title="SA"
-          containerStyle={{
-            marginVertical: 15,
-            backgroundColor: isDarkMode
-              ? lightColors.secondary
-              : lightColors.primary
-          }}
-        />
-        <Text style={styles.name}>Shuaib Anwar</Text>
-        <Text>shueb.anwar@gmail.com</Text>
-      </View>
-      <DrawerContentScrollView {...props}>
-        <DrawerItemList {...props} />
-        <DrawerItem
-          icon={({ color, focused, size }) => (
-            <Icon
-              name="logout"
-              type="material-community"
-              color={color}
-              size={size}
-            />
-          )}
-          label="Logout"
-          onPress={() =>
-            props.navigation.navigate('LoginScreen', {
-              screen: 'PhoneScreen',
-              name: 'Jane'
-            })
-          }
-        />
-      </DrawerContentScrollView>
-    </>
-  );
-}
-
 const styles = StyleSheet.create({
+  container: {
+    marginHorizontal: 10
+  },
   avatarContainer: {
     flexDirection: 'column',
     justifyContent: 'center',
@@ -136,8 +90,10 @@ const styles = StyleSheet.create({
   },
   text: { fontSize: 42 },
   row: {
-    flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    gap: 15
   },
   col: { flex: 1 }
 });
+
+export default MainScreen;

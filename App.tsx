@@ -5,15 +5,25 @@
  * @format
  */
 
-import React from 'react';
-import { Platform, useColorScheme } from 'react-native';
-import { MainScreen, CustomDrawerContent } from './Home';
-import { Message, Messages } from './Home/Messages';
-import ProfileScreen from './Home/ProfilePage';
+import React, { useState } from 'react';
+import { Alert, StyleSheet, useColorScheme, View, Text } from 'react-native';
+import MainScreen from './Home';
+import { Message, Messages } from './Messages';
+import ProfileScreen from './Profile';
+import DisplayNameScreen from './Profile/DisplayNameScreen';
+import EmailScreen from './Profile/EmailScreen';
+import BloodGroupScreen from './Profile/BloodGroupScreen';
+import DocumentScreen from './Profile/DocumentScreen';
+import AddressScreen from './Profile/AddressScreen';
 import RequestBlood from './Home/RequestBlood';
 import RequestBloodConfirmation from './Home/RequestBloodConfirmation';
 import LoginScreen from './LoginScreen';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem
+} from '@react-navigation/drawer';
 import {
   NavigationContainer,
   DefaultTheme,
@@ -21,104 +31,16 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
+  Avatar,
   Icon,
   lightColors,
-  darkColors,
-  createTheme,
   ThemeProvider
 } from '@rneui/themed';
-
-const Colors = {
-  theme: '#d42029',
-  primary: '#1292B4',
-  secondary: '#6b6b6b',
-  white: '#FFF',
-  lighter: '#F3F3F3',
-  light: '#DAE1E7',
-  dark: '#444',
-  darker: '#222',
-  black: '#000'
-};
+import auth from '@react-native-firebase/auth';
+import { lightTheme, darkTheme } from './Theme'
+import Colors from './Theme/Colors'
 
 const Stack = createNativeStackNavigator();
-
-const theme = createTheme({
-  lightColors: {
-    ...Platform.select({
-      default: lightColors.platform.android,
-      ios: lightColors.platform.ios
-    }),
-    ...{
-      primary: Colors.theme
-    }
-  },
-  components: {
-    Button: {
-      titleStyle: {
-        fontWeight: 'normal',
-        textTransform: 'uppercase'
-      },
-      buttonStyle: {
-        height: 45
-      }
-    },
-    Input: {
-      inputStyle: {
-        borderColor: 'red'
-      },
-      inputContainerStyle: {
-        borderWidth: 1,
-        paddingHorizontal: 10,
-        height: 45
-      },
-      labelStyle: {
-        fontWeight: 'normal',
-        marginBottom: 4
-      }
-    }
-  },
-  mode: 'light'
-});
-
-const darkTheme = createTheme({
-  darkColors: {
-    ...Platform.select({
-      default: darkColors.platform.android,
-      ios: darkColors.platform.ios
-    })
-  },
-  components: {
-    Card: {
-      containerStyle: {
-        backgroundColor: darkColors.grey5
-      }
-    },
-    Button: {
-      titleStyle: {
-        fontWeight: 'normal',
-        textTransform: 'uppercase'
-      },
-      buttonStyle: {
-        height: 45
-      }
-    },
-    Input: {
-      inputStyle: {
-        borderColor: 'red'
-      },
-      inputContainerStyle: {
-        borderWidth: 1,
-        paddingHorizontal: 10,
-        height: 45
-      },
-      labelStyle: {
-        fontWeight: 'normal',
-        marginBottom: 4
-      }
-    }
-  },
-  mode: 'dark'
-});
 
 // const CustomDarkTheme = {
 //   ...DarkTheme,
@@ -136,7 +58,7 @@ const MyLightTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: Colors.theme //'rgb(255, 45, 85)'
+    primary: Colors.theme
   }
 };
 
@@ -158,8 +80,8 @@ const DrawerScreens = () => {
       screenOptions={
         isDarkMode
           ? {
-              headerTintColor: lightColors.white
-            }
+            headerTintColor: lightColors.white
+          }
           : {}
       }
       drawerContent={CustomDrawerContent}>
@@ -210,29 +132,92 @@ const DrawerScreens = () => {
   );
 };
 
-const App = () => {
+function CustomDrawerContent(props) {
   const isDarkMode = useColorScheme() === 'dark';
-
-  // if (!user) {
-  //   alert('no user')
-  // } else {
-  // }
+  const user = auth().currentUser;
 
   return (
-    <ThemeProvider theme={isDarkMode ? darkTheme : theme}>
+    <>
+      <View style={styles.avatarContainer}>
+        <Avatar
+          size={100}
+          rounded
+          // icon={{ name: 'account', type: 'material-community' }}
+          title="SA"
+          containerStyle={{
+            marginVertical: 15,
+            backgroundColor: isDarkMode
+              ? lightColors.secondary
+              : lightColors.primary
+          }}
+        />
+        <Text style={styles.name}>{user?.displayName ?? user?.phoneNumber}</Text>
+        {user?.email && <Text>{user.email}</Text>}
+        <Text>{user?.phoneNumber}</Text>
+      </View>
+      <DrawerContentScrollView {...props}>
+        <DrawerItemList {...props} />
+        <DrawerItem
+          icon={({ color, focused, size }) => (
+            <Icon
+              name="logout"
+              type="material-community"
+              color={color}
+              size={size}
+            />
+          )}
+          label="Logout"
+          onPress={() => {
+            Alert.alert('Signup', 'Do you want to signout?', [
+              { text: 'Cancel', style: 'cancel', },
+              { text: 'OK', onPress: () => auth().signOut() },
+            ]);
+          }}
+        />
+      </DrawerContentScrollView>
+    </>
+  );
+}
+
+const App = () => {
+  const isDarkMode = useColorScheme() === 'dark';
+  const [user, setUser] = useState(auth().currentUser);
+
+  auth().onAuthStateChanged((user) => {
+    setUser(user);
+  });
+
+  if (!user) {
+    return (
+      <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+        <NavigationContainer theme={isDarkMode ? MyDarkTheme : MyLightTheme}>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="LoginScreen"
+              component={LoginScreen}
+              options={{ title: 'Enter Contact Number', headerShown: false }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ThemeProvider>
+    )
+  }
+
+  return (
+    <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <NavigationContainer theme={isDarkMode ? MyDarkTheme : MyLightTheme}>
         <Stack.Navigator>
-          <Stack.Screen
-            name="LoginScreen"
-            component={LoginScreen}
-            options={{ title: 'Enter Contact Number', headerShown: false }}
-          />
           <Stack.Screen
             name="Home"
             component={DrawerScreens}
             options={{ title: 'Welcome', headerShown: false }}
           />
           <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="DisplayNameScreen" component={DisplayNameScreen} />
+          <Stack.Screen name="EmailScreen" component={EmailScreen} />
+          <Stack.Screen name="BloodGroupScreen" component={BloodGroupScreen} />
+          <Stack.Screen name="DocumentScreen" component={DocumentScreen} />
+          <Stack.Screen name="AddressScreen" component={AddressScreen} />
           <Stack.Screen name="Message" component={Message} />
           <Stack.Screen name="RequestBlood" component={RequestBlood} />
           <Stack.Screen
@@ -245,5 +230,22 @@ const App = () => {
     </ThemeProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  avatarContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 30
+  },
+  avatar: {
+    backgroundColor: lightColors.secondary,
+    marginVertical: 15
+  },
+  name: {
+    fontSize: 20,
+    textTransform: 'uppercase'
+  }
+});
 
 export default App;
