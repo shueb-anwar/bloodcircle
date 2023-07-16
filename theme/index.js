@@ -24,16 +24,22 @@ export const lightTheme = createTheme({
             },
             buttonStyle: {
                 height: 45
+            },
+            disabledStyle: {
+                
             }
         },
         Input: {
+            containerStyle: {
+                paddingHorizontal: 0,
+            },
             inputStyle: {
                 borderColor: 'red'
             },
             inputContainerStyle: {
                 borderWidth: 1,
                 paddingHorizontal: 10,
-                height: 45,
+                height: 45
             },
             labelStyle: {
                 fontWeight: 'normal',
@@ -65,13 +71,19 @@ export const darkTheme = createTheme({
             },
             buttonStyle: {
                 height: 45
+            },
+            disabledStyle: {
+                backgroundColor: 'rgba(255, 255, 255, 0.4)'
             }
         },
         Input: {
+            containerStyle: {
+                paddingHorizontal: 0,
+            },
             inputStyle: {
                 borderColor: 'red',
                 marginHorizontal: 0,
-                paddingHorizontal: 0
+                paddingHorizontal: 0,
             },
             inputContainerStyle: {
                 borderWidth: 1,
@@ -81,6 +93,14 @@ export const darkTheme = createTheme({
             labelStyle: {
                 fontWeight: 'normal',
                 marginBottom: 4
+            }
+        },
+        CheckBox: {
+            containerStyle: {
+                marginHorizontal: 50
+            },
+            textStyle: {
+                color: darkColors.grey5
             }
         }
     },

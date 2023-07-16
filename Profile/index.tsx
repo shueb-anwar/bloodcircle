@@ -2,10 +2,20 @@ import React from 'react';
 import { View } from 'react-native';
 import { ListItem, Icon, Button } from '@rneui/themed';
 import auth from '@react-native-firebase/auth';
-import Colors from '../Theme/Colors';
-
+import database from '@react-native-firebase/database';
+import {Address} from "./useAddressValidation"
+interface UserData {
+  address: Address;
+  document: string;
+  bloodGroup: string;
+  dob: string;
+}
 const ProfilePage = ({ navigation }) => {
+  const [userData, setUserData] = React.useState<UserData>();
+
   const user = auth().currentUser;
+  database().ref('/users/' + user?.uid).once('value')
+    .then(snapshot => setUserData(snapshot.val()))
 
   return (
     <View>
@@ -32,7 +42,9 @@ const ProfilePage = ({ navigation }) => {
           <ListItem.Subtitle>{user?.phoneNumber}</ListItem.Subtitle>
         </ListItem.Content>
       </ListItem>
-      <ListItem bottomDivider>
+      <ListItem bottomDivider  onPress={() => 
+          navigation.navigate('DobScreen', { dob: userData?.dob})}
+        >
         <Icon
           name="calendar-month-outline"
           type="material-community"
@@ -40,11 +52,13 @@ const ProfilePage = ({ navigation }) => {
         />
         <ListItem.Content>
           <ListItem.Title>DOB</ListItem.Title>
-          <ListItem.Subtitle>June 25, 1989</ListItem.Subtitle>
+          <ListItem.Subtitle>{userData?.dob}</ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>
-      <ListItem bottomDivider  onPress={() => navigation.navigate('DocumentScreen')}>
+      <ListItem bottomDivider onPress={() => 
+        navigation.navigate('DocumentScreen', { document: userData?.document})}
+      >
         <Icon
           name="calendar-month-outline"
           type="material-community"
@@ -52,19 +66,19 @@ const ProfilePage = ({ navigation }) => {
         />
         <ListItem.Content>
           <ListItem.Title>Document</ListItem.Title>
-          <ListItem.Subtitle>AROPA12345C</ListItem.Subtitle>
+          <ListItem.Subtitle>{userData?.document}</ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>
-      <ListItem bottomDivider onPress={() => navigation.navigate('BloodGroupScreen')}>
+      <ListItem bottomDivider onPress={() => navigation.navigate('BloodGroupScreen', {bloodGroup: userData?.bloodGroup})}>
         <Icon name="water-outline" type="material-community" color="grey" />
         <ListItem.Content>
           <ListItem.Title>Blood Group</ListItem.Title>
-          <ListItem.Subtitle>A Negative</ListItem.Subtitle>
+          <ListItem.Subtitle>{userData?.bloodGroup}</ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>
-      <ListItem bottomDivider onPress={() => navigation.navigate('AddressScreen')}>
+      <ListItem bottomDivider onPress={() => navigation.navigate('AddressScreen', { address: JSON.stringify(userData?.address)})}>
         <Icon
           name="map-marker-outline"
           type="material-community"
@@ -73,7 +87,10 @@ const ProfilePage = ({ navigation }) => {
         <ListItem.Content>
           <ListItem.Title>Address</ListItem.Title>
           <ListItem.Subtitle>
-            0606, KM32, Jaypee Kosmos, Sector 134, Noida
+            {userData?.address.address}{', '}
+            {userData?.address.state}{', '}
+            {userData?.address.city}{', '}
+            {userData?.address.pin}
           </ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Chevron />

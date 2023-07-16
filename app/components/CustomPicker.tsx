@@ -23,7 +23,6 @@ export const CustomPicker = ({ items }) => {
 
 const styles = StyleSheet.create({
   pickerContainer: {
-    marginHorizontal: 10,
     marginBottom: 20,
     borderColor: '#999',
     borderWidth: 1

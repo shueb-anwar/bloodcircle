@@ -13,7 +13,7 @@ export const DisplayNameScreen = ({navigation}) => {
   async function updateDisplayName(name: string) {
     setLoader(true);
     await user?.updateProfile({displayName: name});
-    navigation.navigate('Profile');
+    navigation.popToTop();
     setLoader(false);
   }
 

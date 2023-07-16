@@ -44,7 +44,6 @@ const RequestBlood = ({ navigation }) => {
       />
       <Button
         title="Next"
-        buttonStyle={styles.button}
         onPress={() => navigation.navigate('RequestBloodConfirmation')}
       />
     </ScrollView>
@@ -53,11 +52,8 @@ const RequestBlood = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 10,
+    marginHorizontal: 20,
     paddingVertical: 20
-  },
-  button: {
-    marginHorizontal: 10
   }
 });
 

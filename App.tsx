@@ -14,6 +14,7 @@ import DisplayNameScreen from './Profile/DisplayNameScreen';
 import EmailScreen from './Profile/EmailScreen';
 import BloodGroupScreen from './Profile/BloodGroupScreen';
 import DocumentScreen from './Profile/DocumentScreen';
+import DobScreen from './Profile/DobScreen';
 import AddressScreen from './Profile/AddressScreen';
 import RequestBlood from './Home/RequestBlood';
 import RequestBloodConfirmation from './Home/RequestBloodConfirmation';
@@ -217,6 +218,7 @@ const App = () => {
           <Stack.Screen name="EmailScreen" component={EmailScreen} />
           <Stack.Screen name="BloodGroupScreen" component={BloodGroupScreen} />
           <Stack.Screen name="DocumentScreen" component={DocumentScreen} />
+          <Stack.Screen name="DobScreen" component={DobScreen} />
           <Stack.Screen name="AddressScreen" component={AddressScreen} />
           <Stack.Screen name="Message" component={Message} />
           <Stack.Screen name="RequestBlood" component={RequestBlood} />

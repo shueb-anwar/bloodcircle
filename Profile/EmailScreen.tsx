@@ -16,7 +16,7 @@ export const EmailScreen = ({ navigation }) => {
             setLoader(true);
             try {
                 await user?.updateEmail(email);
-                navigation.navigate('Profile');
+                navigation.popToTop();
             } catch (error: any) {
                 handleFirebaseError(error);
             }
