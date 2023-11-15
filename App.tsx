@@ -5,9 +5,9 @@
  * @format
  */
 
-import React, { useState } from 'react';
+import React, { Suspense, useState, startTransition } from 'react';
 import { Alert, StyleSheet, useColorScheme, View, Text } from 'react-native';
-import MainScreen from './Home';
+import HomeScreen from './Home';
 import { Message, Messages } from './Messages';
 import ProfileScreen from './Profile';
 import DisplayNameScreen from './Profile/DisplayNameScreen';
@@ -23,14 +23,15 @@ import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
-  DrawerItem
+  DrawerItem,
+  DrawerScreenProps
 } from '@react-navigation/drawer';
 import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme
 } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
   Avatar,
   Icon,
@@ -41,7 +42,26 @@ import auth from '@react-native-firebase/auth';
 import { lightTheme, darkTheme } from './Theme'
 import Colors from './Theme/Colors'
 
-const Stack = createNativeStackNavigator();
+type RootStackParamList = {
+  LoginScreen: undefined;
+  Main: undefined;
+  Home: undefined;
+  RequestBlood: undefined;
+  RequestBloodConfirmation: undefined;
+  Profile: undefined;
+  DisplayNameScreen: undefined;
+  EmailScreen: undefined;
+  BloodGroupScreen: { bloodGroup: string | undefined };
+  DobScreen: { dob: string | undefined };
+  AddressScreen: { address: string };
+  DocumentScreen: { document: string | undefined };
+  Messages: undefined;
+  Message: undefined;
+};
+
+export type NavigationProps<T extends keyof RootStackParamList> = NativeStackScreenProps<RootStackParamList, T>;
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 // const CustomDarkTheme = {
 //   ...DarkTheme,
@@ -71,13 +91,13 @@ const MyDarkTheme = {
   }
 };
 
-const Drawer = createDrawerNavigator();
+const Drawer = createDrawerNavigator<RootStackParamList>();
 const DrawerScreens = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
     <Drawer.Navigator
-      initialRouteName="Main"
+      initialRouteName="Home"
       screenOptions={
         isDarkMode
           ? {
@@ -87,8 +107,8 @@ const DrawerScreens = () => {
       }
       drawerContent={CustomDrawerContent}>
       <Drawer.Screen
-        name="Main"
-        component={MainScreen}
+        name="Home"
+        component={HomeScreen}
         options={{
           title: 'Home',
           drawerIcon: ({ color, size, focused }) => (
@@ -133,7 +153,7 @@ const DrawerScreens = () => {
   );
 };
 
-function CustomDrawerContent(props) {
+function CustomDrawerContent(props: any) {
   const isDarkMode = useColorScheme() === 'dark';
   const user = auth().currentUser;
 
@@ -209,18 +229,18 @@ const App = () => {
       <NavigationContainer theme={isDarkMode ? MyDarkTheme : MyLightTheme}>
         <Stack.Navigator>
           <Stack.Screen
-            name="Home"
+            name="Main"
             component={DrawerScreens}
             options={{ title: 'Welcome', headerShown: false }}
           />
           <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Message" component={Message} />
           <Stack.Screen name="DisplayNameScreen" component={DisplayNameScreen} />
           <Stack.Screen name="EmailScreen" component={EmailScreen} />
           <Stack.Screen name="BloodGroupScreen" component={BloodGroupScreen} />
           <Stack.Screen name="DocumentScreen" component={DocumentScreen} />
           <Stack.Screen name="DobScreen" component={DobScreen} />
           <Stack.Screen name="AddressScreen" component={AddressScreen} />
-          <Stack.Screen name="Message" component={Message} />
           <Stack.Screen name="RequestBlood" component={RequestBlood} />
           <Stack.Screen
             name="RequestBloodConfirmation"
@@ -231,6 +251,7 @@ const App = () => {
       </NavigationContainer>
     </ThemeProvider>
   );
+
 };
 
 const styles = StyleSheet.create({

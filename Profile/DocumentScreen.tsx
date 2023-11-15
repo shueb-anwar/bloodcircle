@@ -6,11 +6,13 @@ import { CustomPicker } from '../app/components';
 
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
+import { NavigationProps } from "../App";
 
-export const DocumentScreen = ({ route, navigation }) => {
+export const DocumentScreen = ({ route, navigation }: NavigationProps<'DocumentScreen'>) => {
   const user = auth().currentUser;
   const { document } = route.params;
   const [name, setName] = useState(document);
+  const [selected, setSelected] = useState<string>();
   const [loader, setLoader] = useState<boolean>(false);
 
 
@@ -24,6 +26,9 @@ export const DocumentScreen = ({ route, navigation }) => {
   return (<>
     <View style={styles.container}>
       <CustomPicker
+        label="Select Document Type"
+        value={selected}
+        onChange={(value)=> setSelected(value)}
         items={[
           { label: 'Aadhar card', value: 'aadhar' },
           { label: 'Pan Card', value: 'pan' },

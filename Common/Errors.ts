@@ -145,7 +145,7 @@ export function getNumberError(
   value: unknown,
   nullable = true
 ): string | undefined {
-  if (!nullable && value === undefined) {
+  if (!nullable && value === undefined || value == 0) {
     return translations.Empty.defaultMessage;
   }
 

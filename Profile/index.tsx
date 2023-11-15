@@ -1,21 +1,46 @@
 import React from 'react';
 import { View } from 'react-native';
+
 import { ListItem, Icon, Button } from '@rneui/themed';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
-import {Address} from "./useAddressValidation"
-interface UserData {
+import { Address } from "./useAddressValidation"
+
+import { NavigationProps } from "../App"
+import { Text } from '@rneui/base';
+export interface ProfileData {
   address: Address;
   document: string;
   bloodGroup: string;
   dob: string;
 }
-const ProfilePage = ({ navigation }) => {
-  const [userData, setUserData] = React.useState<UserData>();
+
+const required: Array<keyof ProfileData> = ['address', 'document', 'bloodGroup', 'dob'];
+
+export function hasRequiredProperties(profile: ProfileData) {
+  if (profile === null) {
+    return false;
+  }
+
+  return required.every(
+    (key) => profile[key] !== undefined && profile[key] !== ''
+  );
+}
+
+const ProfilePage = ({ navigation }: NavigationProps<'Profile'>) => {
+  const [userData, setUserData] = React.useState<ProfileData>();
 
   const user = auth().currentUser;
   database().ref('/users/' + user?.uid).once('value')
-    .then(snapshot => setUserData(snapshot.val()))
+    .then(snapshot => { setUserData(snapshot.val()) })
+
+  const Mandatory = () => {
+    return <Text style={{ color: 'red' }}>Mandatory</Text>
+  }
+
+  const handleUpdate = () => {
+    
+  }
 
   return (
     <View>
@@ -23,7 +48,7 @@ const ProfilePage = ({ navigation }) => {
         <Icon name="account-outline" type="material-community" color="grey" />
         <ListItem.Content>
           <ListItem.Title>Name</ListItem.Title>
-          <ListItem.Subtitle>{user?.displayName}</ListItem.Subtitle>
+          <ListItem.Subtitle>{user?.displayName ?? <Mandatory />}</ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>
@@ -42,22 +67,8 @@ const ProfilePage = ({ navigation }) => {
           <ListItem.Subtitle>{user?.phoneNumber}</ListItem.Subtitle>
         </ListItem.Content>
       </ListItem>
-      <ListItem bottomDivider  onPress={() => 
-          navigation.navigate('DobScreen', { dob: userData?.dob})}
-        >
-        <Icon
-          name="calendar-month-outline"
-          type="material-community"
-          color="grey"
-        />
-        <ListItem.Content>
-          <ListItem.Title>DOB</ListItem.Title>
-          <ListItem.Subtitle>{userData?.dob}</ListItem.Subtitle>
-        </ListItem.Content>
-        <ListItem.Chevron />
-      </ListItem>
-      <ListItem bottomDivider onPress={() => 
-        navigation.navigate('DocumentScreen', { document: userData?.document})}
+      <ListItem bottomDivider onPress={() =>
+        navigation.navigate('DobScreen', { dob: userData?.dob })}
       >
         <Icon
           name="calendar-month-outline"
@@ -65,20 +76,34 @@ const ProfilePage = ({ navigation }) => {
           color="grey"
         />
         <ListItem.Content>
-          <ListItem.Title>Document</ListItem.Title>
-          <ListItem.Subtitle>{userData?.document}</ListItem.Subtitle>
+          <ListItem.Title>DOB</ListItem.Title>
+          <ListItem.Subtitle>{userData?.dob ?? <Mandatory />}</ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>
-      <ListItem bottomDivider onPress={() => navigation.navigate('BloodGroupScreen', {bloodGroup: userData?.bloodGroup})}>
+      <ListItem bottomDivider onPress={() =>
+        navigation.navigate('DocumentScreen', { document: userData?.document })}
+      >
+        <Icon
+          name="file-check-outline"
+          type="material-community"
+          color="grey"
+        />
+        <ListItem.Content>
+          <ListItem.Title>Document</ListItem.Title>
+          <ListItem.Subtitle>{userData?.document ?? <Mandatory />}</ListItem.Subtitle>
+        </ListItem.Content>
+        <ListItem.Chevron />
+      </ListItem>
+      <ListItem bottomDivider onPress={() => navigation.navigate('BloodGroupScreen', { bloodGroup: userData?.bloodGroup })}>
         <Icon name="water-outline" type="material-community" color="grey" />
         <ListItem.Content>
           <ListItem.Title>Blood Group</ListItem.Title>
-          <ListItem.Subtitle>{userData?.bloodGroup}</ListItem.Subtitle>
+          <ListItem.Subtitle>{userData?.bloodGroup ?? <Mandatory />}</ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>
-      <ListItem bottomDivider onPress={() => navigation.navigate('AddressScreen', { address: JSON.stringify(userData?.address)})}>
+      <ListItem bottomDivider onPress={() => navigation.navigate('AddressScreen', { address: JSON.stringify(userData?.address) })}>
         <Icon
           name="map-marker-outline"
           type="material-community"
@@ -87,10 +112,11 @@ const ProfilePage = ({ navigation }) => {
         <ListItem.Content>
           <ListItem.Title>Address</ListItem.Title>
           <ListItem.Subtitle>
-            {userData?.address.address}{', '}
-            {userData?.address.state}{', '}
-            {userData?.address.city}{', '}
-            {userData?.address.pin}
+            {userData?.address?.address ?? <Mandatory />}
+            {userData?.address?.address}{', '}
+            {userData?.address?.state}{', '}
+            {userData?.address?.city}{', '}
+            {userData?.address?.pin}
           </ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Chevron />

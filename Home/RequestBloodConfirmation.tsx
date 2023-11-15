@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { ScrollView, View, StyleSheet, Text } from 'react-native';
 import { Button, Card, CheckBox } from '@rneui/themed';
+import { NavigationProps } from "../App";
 
-const RequestBloodConfirmation = ({ navigation }) => {
+const RequestBloodConfirmation = ({ navigation }: NavigationProps<'RequestBloodConfirmation'>) => {
   const [checked, setChecked] = useState(true);
 
   const toggleCheckbox = () => setChecked(!checked);

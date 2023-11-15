@@ -6,8 +6,11 @@
  */
 
 import 'react-native-gesture-handler';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { NavigationProps } from "../App";
+
 import {
+  Alert,
   ScrollView,
   View,
   Text,
@@ -16,22 +19,46 @@ import {
 } from 'react-native';
 
 import { Button, Card, Icon, lightColors } from '@rneui/themed';
-
-const MainScreen = ({ navigation }) => {
+import useProfile from '../Profile/useProfile';
+import auth from '@react-native-firebase/auth';
+import database from '@react-native-firebase/database';
+import { hasRequiredProperties } from "../Profile"
+const HomeScreen = ({ navigation }: NavigationProps<'Home'>) => {
   const isDarkMode = useColorScheme() === 'dark';
+  const user = auth().currentUser;
+
+  database().ref('/requests/' + user?.uid).once('value').then(snapshot => {
+    const data = snapshot.val();
+    console.log(data)
+  })
+
+  const handleRequestBlood = () => {
+    if (user?.uid) {
+      database().ref('/users/' + user?.uid).once('value').then(snapshot => {
+        const data = snapshot.val();
+        if (!hasRequiredProperties(data)) {
+          Alert.alert('Profile Incomeplete', 'You need to update your profile before making any request', [
+            { text: 'cancel', style: "cancel", onPress: () => console.log('OK Pressed') },
+            { text: 'View Profile', onPress: () => navigation.navigate('Profile') }
+          ]);
+        } else {
+          navigation.navigate('RequestBlood');
+        }
+      })
+    }
+  }
 
   return (
     <ScrollView style={styles.container}>
       <Card>
-        <Card.Title style={styles.userName}>John Doe</Card.Title>
+        <Card.Title style={styles.userName}>{user?.displayName ?? "Guest"}</Card.Title>
         <Button
           color={isDarkMode ? 'secondary' : 'primary'}
-          onPress={() => navigation.navigate('RequestBlood')}>
+          onPress={handleRequestBlood}>
           Request for Blood{' '}
           <Icon name="plus" color="white" type="material-community" />
         </Button>
         <Card.Divider />
-        <Text>Father Name: John doe</Text>
         <Text>Last Donated on: 21 July 2022</Text>
       </Card>
       <View style={styles.row}>
@@ -96,4 +123,4 @@ const styles = StyleSheet.create({
   col: { flex: 1 }
 });
 
-export default MainScreen;
+export default HomeScreen;

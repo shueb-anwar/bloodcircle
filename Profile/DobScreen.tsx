@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Input, Button } from '@rneui/themed';
 import { Loading } from '../app/components'
-import { CustomPicker } from '../app/components';
 
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
+import { NavigationProps } from "../App";
 
-export const DobScreen = ({ route, navigation }) => {
+export const DobScreen = ({ route, navigation }: NavigationProps<'DobScreen'>) => {
   const user = auth().currentUser;
   const { dob } = route.params;
   const [value, setValue] = useState(dob);

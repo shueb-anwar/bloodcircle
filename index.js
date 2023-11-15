@@ -1,6 +1,7 @@
 /**
  * @format
  */
+import { Suspense } from "react";
 
 import { AppRegistry } from 'react-native';
 import App from './App';

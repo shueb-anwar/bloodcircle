@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { ListItem, Icon } from '@rneui/themed';
+import { NavigationProps } from "../App";
 
 function openMessage(navigation) {
   navigation.navigate('Message', {
@@ -8,7 +9,7 @@ function openMessage(navigation) {
   });
 }
 
-export const Messages = ({ navigation }) => {
+export const Messages = ({ navigation }: NavigationProps<'Messages'>) => {
   return (
     <ScrollView>
       <ListItem bottomDivider>

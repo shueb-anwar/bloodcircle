@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Input, Button } from '@rneui/themed';
 import { Loading } from '../app/components'
 import useAdderssForm from './useAdderssForm';
 
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
+import { NavigationProps } from "../App";
+import { ScrollView } from 'react-native-gesture-handler';
 
-export const DisplayNameScreen = ({ route, navigation }) => {
+export const AddressScreen = ({ route, navigation }: NavigationProps<'AddressScreen'>) => {
   const user = auth().currentUser;
   const { address: currentAddress } = route.params;
   const [loader, setLoader] = useState<boolean>(false);
-  const { address, errors, isSaveDisabled, onPropertyChange } = useAdderssForm(JSON.parse(currentAddress))
+  const { address, errors, isSaveDisabled, onPropertyChange } = useAdderssForm(currentAddress ? JSON.parse(currentAddress): undefined)
 
   async function updateAddress() {
     setLoader(true);
@@ -21,7 +23,7 @@ export const DisplayNameScreen = ({ route, navigation }) => {
   }
 
   return (<>
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Input label="Address Line 1" placeholder="Enter your address" value={address.address}
         onChangeText={(value) => onPropertyChange('address', value)}
         errorMessage={errors.address}
@@ -34,12 +36,12 @@ export const DisplayNameScreen = ({ route, navigation }) => {
         onChangeText={(value) => onPropertyChange('city', value)}
         errorMessage={errors.city} 
       />
-      <Input label="Pin" placeholder="Pin Code" value={address.pin}
+      <Input label="Pin" keyboardType='numeric' placeholder="Pin Code" value={address.pin}
         onChangeText={(value) => onPropertyChange('pin', value)}
         errorMessage={errors.pin} 
       />
       <Button title="Continue" onPress={() => updateAddress()} disabled={isSaveDisabled} />
-    </View>
+    </ScrollView>
 
     <Loading loading={loader} />
   </>
@@ -58,4 +60,4 @@ const styles = StyleSheet.create({
   col: { flex: 1 }
 });
 
-export default DisplayNameScreen;
+export default AddressScreen;

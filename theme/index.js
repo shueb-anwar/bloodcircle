@@ -1,5 +1,6 @@
 import { lightColors, darkColors, createTheme } from '@rneui/themed';
 import Colors from './Colors'
+import { Platform } from 'react-native';
 
 export const lightTheme = createTheme({
     lightColors: {
@@ -97,10 +98,10 @@ export const darkTheme = createTheme({
         },
         CheckBox: {
             containerStyle: {
-                marginHorizontal: 50
+                backgroundColor: darkColors.white
             },
             textStyle: {
-                color: darkColors.grey5
+                color: darkColors.grey3
             }
         }
     },
